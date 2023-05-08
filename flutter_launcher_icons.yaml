@@ -1,0 +1,6 @@
+flutter_launcher_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'lib/shared/assets/app/launcher_icon.png'
+  min_sdk_android: 21
+  remove_alpha_ios: true
