@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:infinitywords/modules/auth/domain/errors/google_play_sign_in_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +11,7 @@ class AuthRepositoryImp implements AuthRepository {
       googlePlaySignIn() async {
     try {
       final googleUser = await GoogleSignIn(
-        signInOption: SignInOption.games,
+        signInOption: SignInOption.standard,
       ).signIn();
       final googleAuth = await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -50,6 +51,12 @@ class AuthRepositoryImp implements AuthRepository {
       return Error(GenericPlaySignInError(
         code: e.code,
         message: e.message,
+        error: 'Algo deu errado',
+      ));
+    } catch (e) {
+      return Error(GenericPlaySignInError(
+        code: 'unknow',
+        message: e.toString(),
         error: 'Algo deu errado',
       ));
     }
