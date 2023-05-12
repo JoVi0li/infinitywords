@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:infinitywords/firebase_options.dart';
 import 'package:infinitywords/shared/inject/inject.dart';
+import 'package:infinitywords/shared/routes/auth_routes.dart';
+import 'package:infinitywords/shared/routes/home_routes.dart';
 import 'package:infinitywords/shared/themes/button_theme.dart';
 import 'package:infinitywords/shared/themes/text_theme.dart';
 
@@ -19,7 +21,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +30,11 @@ class MyApp extends StatelessWidget {
         textTheme: CustomTextTheme()(),
         outlinedButtonTheme: CustomButtonTheme.outlinedButtonThemeData(),
       ),
-      home: const SignInScreen(),
+      routes: {
+        AuthRoutes.signIn: (context) => const SignInScreen(),
+        HomeRoutes.home: (context) => Container(),
+      },
+      initialRoute: AuthRoutes.signIn,
     );
   }
 }

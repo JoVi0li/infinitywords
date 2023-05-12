@@ -19,6 +19,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     _bloc = _getIt<SignInBloc>();
+    _bloc.checkAuthStatus(context);
   }
 
   @override
