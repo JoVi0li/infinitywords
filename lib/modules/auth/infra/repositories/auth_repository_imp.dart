@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:ui';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:infinitywords/modules/auth/domain/errors/auth_errors.dart';
 import 'package:infinitywords/modules/auth/domain/errors/google_sign_in_errors.dart';
