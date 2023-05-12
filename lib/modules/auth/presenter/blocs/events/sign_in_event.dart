@@ -1,5 +1,5 @@
 abstract class SignInEvent {}
 
-class GooglePlaySignInEvent extends SignInEvent {}
+class GoogleSignInEvent extends SignInEvent {}
 
 class GameCenterSignInEvent extends SignInEvent {}

@@ -1,4 +1,4 @@
-import 'package:infinitywords/modules/auth/domain/errors/google_play_sign_in_errors.dart';
+import 'package:infinitywords/modules/auth/domain/errors/google_sign_in_errors.dart';
 
 abstract class SignInState {}
 
@@ -9,14 +9,14 @@ class LoadingSignInState extends SignInState {}
 class SuccessSignInState extends SignInState {}
 
 class ErrorSignInState extends SignInState {
-  ErrorSignInState._({this.googlePlayError});
-  final GooglePlaySignInError? googlePlayError;
+  ErrorSignInState._({this.googleError});
+  final GoogleSignInError? googleError;
 
-  factory ErrorSignInState.googlePlayError(
-    GooglePlaySignInError googlePlaySignInError,
+  factory ErrorSignInState.googleError(
+    GoogleSignInError googleSignInError,
   ) {
     return ErrorSignInState._(
-      googlePlayError: googlePlaySignInError,
+      googleError: googleSignInError,
     );
   }
 }

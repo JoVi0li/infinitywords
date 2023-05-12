@@ -1,14 +1,16 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:infinitywords/modules/auth/domain/errors/google_play_sign_in_errors.dart';
+import 'package:infinitywords/modules/auth/domain/errors/auth_errors.dart';
+import 'package:infinitywords/modules/auth/domain/errors/google_sign_in_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:infinitywords/modules/auth/domain/repositories/auth_repository.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 class AuthRepositoryImp implements AuthRepository {
   @override
-  Future<Result<UserCredential, GooglePlaySignInError>>
-      googlePlaySignIn() async {
+  Future<Result<UserCredential, GoogleSignInError>> googleSignIn() async {
     try {
       final googleUser = await GoogleSignIn(
         signInOption: SignInOption.standard,
@@ -41,23 +43,43 @@ class AuthRepositoryImp implements AuthRepository {
         case 'invalid-verification-id':
           return Error(InvalidVerificationId());
         default:
-          return Error(GenericPlaySignInError(
+          return Error(GenericSignInError(
             code: e.code,
             message: e.message,
             error: 'Algo deu errado',
           ));
       }
     } on FirebaseException catch (e) {
-      return Error(GenericPlaySignInError(
+      return Error(GenericSignInError(
         code: e.code,
         message: e.message,
         error: 'Algo deu errado',
       ));
     } catch (e) {
-      return Error(GenericPlaySignInError(
+      return Error(GenericSignInError(
         code: 'unknow',
         message: e.toString(),
         error: 'Algo deu errado',
+      ));
+    }
+  }
+
+  @override
+  Result<void, AuthError> checkAuthState(
+    Future<void> Function(User? user) onChange,
+  ) {
+    try {
+      FirebaseAuth.instance.authStateChanges().listen(onChange);
+      return const Success(null);
+    } on FirebaseAuthException catch (e) {
+      return Error(GenericAuthError(
+        code: e.code,
+        message: e.message,
+      ));
+    } on FirebaseException catch (e) {
+      return Error(GenericAuthError(
+        code: e.code,
+        message: e.message,
       ));
     }
   }

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class GooglePlaySignInError extends FirebaseAuthException {
-  GooglePlaySignInError({
+abstract class GoogleSignInError extends FirebaseAuthException {
+  GoogleSignInError({
     required super.code,
     required super.message,
     required this.error,
@@ -9,15 +9,15 @@ abstract class GooglePlaySignInError extends FirebaseAuthException {
   final String error;
 }
 
-class GenericPlaySignInError extends GooglePlaySignInError {
-  GenericPlaySignInError({
+class GenericSignInError extends GoogleSignInError {
+  GenericSignInError({
     required super.code,
     required super.message,
     required super.error,
   });
 }
 
-class AccountExistsWithDifferentCredentialError extends GooglePlaySignInError {
+class AccountExistsWithDifferentCredentialError extends GoogleSignInError {
   AccountExistsWithDifferentCredentialError()
       : super(
           code: 'account-exists-with-different-credential',
@@ -27,7 +27,7 @@ class AccountExistsWithDifferentCredentialError extends GooglePlaySignInError {
         );
 }
 
-class InvalidCredential extends GooglePlaySignInError {
+class InvalidCredential extends GoogleSignInError {
   InvalidCredential()
       : super(
           code: 'invalid-credential',
@@ -36,7 +36,7 @@ class InvalidCredential extends GooglePlaySignInError {
         );
 }
 
-class OperationNotAllowed extends GooglePlaySignInError {
+class OperationNotAllowed extends GoogleSignInError {
   OperationNotAllowed()
       : super(
           code: 'operation-not-allowed',
@@ -45,7 +45,7 @@ class OperationNotAllowed extends GooglePlaySignInError {
         );
 }
 
-class UserDisabled extends GooglePlaySignInError {
+class UserDisabled extends GoogleSignInError {
   UserDisabled()
       : super(
           code: 'user-disabled',
@@ -54,7 +54,7 @@ class UserDisabled extends GooglePlaySignInError {
         );
 }
 
-class UserNotFound extends GooglePlaySignInError {
+class UserNotFound extends GoogleSignInError {
   UserNotFound()
       : super(
           code: 'user-not-found',
@@ -63,7 +63,7 @@ class UserNotFound extends GooglePlaySignInError {
         );
 }
 
-class WrongPassword extends GooglePlaySignInError {
+class WrongPassword extends GoogleSignInError {
   WrongPassword()
       : super(
           code: 'wrong-password',
@@ -72,7 +72,7 @@ class WrongPassword extends GooglePlaySignInError {
         );
 }
 
-class InvalidVerificationCode extends GooglePlaySignInError {
+class InvalidVerificationCode extends GoogleSignInError {
   InvalidVerificationCode()
       : super(
           code: 'invalid-verification-code',
@@ -81,7 +81,7 @@ class InvalidVerificationCode extends GooglePlaySignInError {
         );
 }
 
-class InvalidVerificationId extends GooglePlaySignInError {
+class InvalidVerificationId extends GoogleSignInError {
   InvalidVerificationId()
       : super(
           code: 'invalid-verification-id',
