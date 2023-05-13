@@ -1,7 +1,7 @@
 import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
 
 extension GameEntityMapper on GameEntity {
-  GameEntity fromMap(Map<String, dynamic> json) {
+  static GameEntity fromMap(Map<String, dynamic> json) {
     return GameEntity(
       topic: json['topic'],
       dificult: json['dificult'],

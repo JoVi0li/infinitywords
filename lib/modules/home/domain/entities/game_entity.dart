@@ -8,4 +8,6 @@ class GameEntity {
     required this.topic,
     required this.dificult,
   });
+
+  
 }
