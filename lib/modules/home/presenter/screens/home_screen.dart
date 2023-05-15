@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/bloc/home_bloc.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/create_game_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/get_favorite_games_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/get_recent_games_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/get_favorite_games_state.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/get_recent_games_state.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/home_state.dart';
+import 'package:infinitywords/modules/home/presenter/components/game_list_component.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,12 +19,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  final getIt = GetIt.I;
   late final TabController _tabController;
+  late final HomeBloc _bloc;
+  List<GameEntity> favoriteGames = [];
+  List<GameEntity> recentGames = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _bloc = getIt<HomeBloc>();
+    addGetFavoriteGamesEvent();
+    addGetRecentGamesEvent();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    getIt.resetLazySingleton<HomeBloc>();
+    super.dispose();
+  }
+
+  void addCreateGameEvent({
+    required String input,
+    required BuildContext context,
+  }) {
+    _bloc.add(CreateGameEvent(input: input, context: context));
+  }
+
+  void addGetFavoriteGamesEvent() {
+    _bloc.add(GetFavoriteGamesEvent());
+  }
+
+  void addGetRecentGamesEvent() {
+    _bloc.add(GetRecentGamesEvent());
   }
 
   @override
@@ -24,13 +65,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           left: 16,
           right: 16,
           top: 90,
-          bottom: 50,
+          bottom: 0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Boa\nTarde',
+              _bloc.welcomeMessage,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 40),
@@ -39,19 +80,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),
-            TextField(
-              cursorColor: Colors.white,
-              style: Theme.of(context).textTheme.bodySmall,
-              decoration: InputDecoration(
-                suffixIcon: const Icon(
-                  Icons.arrow_circle_right_outlined,
-                  color: Colors.white,
+            Form(
+              key: _bloc.formKey,
+              child: TextFormField(
+                controller: _bloc.inputController,
+                validator: _bloc.inputValidator,
+                cursorColor: Colors.white,
+                style: Theme.of(context).textTheme.bodySmall,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_circle_right_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => addCreateGameEvent(
+                      input: _bloc.inputController.value.text,
+                      context: context,
+                    ),
+                  ),
+                  labelText: 'Futebol, filmes, séries...',
+                  labelStyle: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Colors.white.withOpacity(0.5)),
                 ),
-                labelText: 'Futebol, filmes, séries...',
-                labelStyle: Theme.of(context)
-                    .textTheme
-                    .bodySmall!
-                    .copyWith(color: Colors.white.withOpacity(0.5)),
               ),
             ),
             const SizedBox(height: 100),
@@ -75,67 +127,56 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ],
             ),
             const SizedBox(height: 24),
-            Expanded(
-              child: Material(
-                color: Colors.transparent,
-                child: TabBarView(controller: _tabController, children: [
-                  ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        ListTile(
-                          contentPadding: const EdgeInsets.all(16),
-                          tileColor: const Color(0xFF313040),
-                          dense: false,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                            side: BorderSide(color: Colors.white),
-                          ),
-                          title: Text(
-                            'Harry Potter',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          subtitle: Text(
-                            'Dificuldade: Média',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        const Divider(),
-                      ],
-                    ),
+            BlocListener<HomeBloc, HomeState>(
+              bloc: _bloc,
+              listener: (context, state) {
+                if (state is SuccessGetFavoriteGamesState) {
+                  setState(() {
+                    isLoading = false;
+                    favoriteGames = state.games;
+                  });
+                }
+
+                if (state is SuccessGetRecentGamesState) {
+                  setState(() {
+                    isLoading = false;
+                    recentGames = state.games;
+                  });
+                }
+
+                if (state is LoadingGetFavoriteGamesState ||
+                    state is LoadingGetRecentGamesState) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                }
+
+                if (state is ErrorGetFavoriteGamesState ||
+                    state is ErrorGetRecentGamesState) {
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              },
+              child: Expanded(
+                child: Material(
+                  color: Colors.transparent,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      GameListComponent(
+                        games: recentGames,
+                        isLoading: isLoading,
+                      ),
+                      GameListComponent(
+                        games: favoriteGames,
+                        isLoading: isLoading,
+                      ),
+                    ],
                   ),
-                  ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context, index) => Column(
-                      children: [
-                        ListTile(
-                          contentPadding: const EdgeInsets.all(16),
-                          tileColor: const Color(0xFF313040),
-                          dense: false,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                            side: BorderSide(color: Colors.white),
-                          ),
-                          title: Text(
-                            'Avatar',
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          subtitle: Text(
-                            'Dificuldade: Fácil',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                        const Divider(),
-                      ],
-                    ),
-                  ),
-                ]),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
