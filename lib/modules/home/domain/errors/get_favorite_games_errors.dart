@@ -25,6 +25,6 @@ class UnauthenticateUserGetFavoriteGamesError extends GetFavoriteGamesError {
           plugin: 'firebase-firestore',
           code: 'unauthenticate',
           message: 'Realize login para prosseguir',
-          error: 'Usuário deslogado',
+          error: 'Usuário não autenticado',
         );
 }

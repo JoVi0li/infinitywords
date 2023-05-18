@@ -1,6 +1,9 @@
+import 'package:dart_openai/openai.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:infinitywords/env/env.dart';
 import 'package:infinitywords/firebase_options.dart';
+import 'package:infinitywords/modules/home/presenter/screens/create_game_screen.dart';
 import 'package:infinitywords/modules/home/presenter/screens/home_screen.dart';
 import 'package:infinitywords/shared/inject/inject.dart';
 import 'package:infinitywords/shared/routes/auth_routes.dart';
@@ -17,6 +20,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Inject.initialize();
+  OpenAI.apiKey = Env.openAIApiKey;
   runApp(const MyApp());
 }
 
@@ -36,6 +40,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AuthRoutes.signIn: (context) => const SignInScreen(),
         HomeRoutes.home: (context) => const HomeScreen(),
+        HomeRoutes.createGame: (context) => const CreateGameScreen(),
       },
       initialRoute: AuthRoutes.signIn,
     );

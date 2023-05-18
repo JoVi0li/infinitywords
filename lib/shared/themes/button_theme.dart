@@ -9,16 +9,13 @@ class CustomButtonTheme {
         foregroundColor: Colors.white,
         shadowColor: Colors.transparent,
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 25,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        side: const BorderSide(
+          color: Colors.white,
+          width: 1.0,
+          style: BorderStyle.solid,
         ),
         shape: const RoundedRectangleBorder(
-          side: BorderSide(
-            color: Colors.red,
-            width: 1.0,
-            style: BorderStyle.solid,
-          ),
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),

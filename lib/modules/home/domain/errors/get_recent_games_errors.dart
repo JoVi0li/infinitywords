@@ -25,6 +25,6 @@ class UnauthenticateUserGetRecentGamesError extends GetRecentGamesError {
           plugin: 'firebase-firestore',
           code: 'unauthenticate',
           message: 'Realize login para prosseguir',
-          error: 'Usuário deslogado',
+          error: 'Usuário não autenticado',
         );
 }

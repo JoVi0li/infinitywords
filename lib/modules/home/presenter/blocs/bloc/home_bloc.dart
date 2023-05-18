@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:infinitywords/modules/home/domain/parameters/create_game_parameter.dart';
-import 'package:infinitywords/modules/home/domain/usecase/create_game_usecase.dart';
+import 'package:infinitywords/modules/home/domain/parameters/start_create_game_parameter.dart';
+import 'package:infinitywords/modules/home/domain/usecase/start_create_game_usecase.dart';
 import 'package:infinitywords/modules/home/domain/usecase/get_favorite_games_usecase.dart';
 import 'package:infinitywords/modules/home/domain/usecase/get_recent_games_usecase.dart';
 import 'package:infinitywords/modules/home/presenter/blocs/enums/welcome_message_enum.dart';
@@ -17,11 +17,11 @@ import 'package:infinitywords/shared/routes/home_routes.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
-    required CreateGameUsecase createGameUsecase,
+    required StartCreateGameUsecase startCreateGameUsecase,
     required GetFavoriteGamesUsecase getFavoriteGamesUsecase,
     required GetRecentGamesUsecase getRecentGamesUsecase,
   }) : super(InitialHomeState()) {
-    _createGameUsecase = createGameUsecase;
+    _startCreateGameUsecase = startCreateGameUsecase;
     _getFavoriteGamesUsecase = getFavoriteGamesUsecase;
     _getRecentGamesUsecase = getRecentGamesUsecase;
     formKey = GlobalKey();
@@ -31,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<CreateGameEvent>(handleCreateGameEvent);
   }
 
-  late final CreateGameUsecase _createGameUsecase;
+  late final StartCreateGameUsecase _startCreateGameUsecase;
   late final GetFavoriteGamesUsecase _getFavoriteGamesUsecase;
   late final GetRecentGamesUsecase _getRecentGamesUsecase;
 
@@ -53,13 +53,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     if (!formKey.currentState!.validate()) return;
-    
-    final createGameParameter = CreateGameParameter(event.input);
 
-    final result = _createGameUsecase(createGameParameter);
+    final createGameParameter = StartCreateGameParameter(event.input);
+
+    final result = _startCreateGameUsecase(createGameParameter);
 
     result.when(
-      (success) async => await navigateToCreateGamePage(event.context),
+      (input) async => await navigateToCreateGamePage(event.context, input),
       (error) => emit(ErrorCreateGameState(error)),
     );
   }
@@ -92,8 +92,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
   }
 
-  Future<void> navigateToCreateGamePage(BuildContext context) async {
-    return await Navigator.pushNamed<void>(context, HomeRoutes.createGame);
+  Future<void> navigateToCreateGamePage(
+    BuildContext context,
+    String input,
+  ) async {
+    return await Navigator.pushNamed<void>(
+      context,
+      HomeRoutes.createGame,
+      arguments: {'input': input},
+    );
   }
 
   String? inputValidator(String? value) {

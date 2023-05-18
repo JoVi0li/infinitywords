@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_openai/openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:infinitywords/modules/home/domain/errors/create_game_errors.dart';
 import 'package:infinitywords/modules/home/domain/errors/get_recent_games_errors.dart';
 import 'package:infinitywords/modules/home/domain/errors/get_favorite_games_errors.dart';
 import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
+import 'package:infinitywords/modules/home/domain/parameters/create_game_parameter.dart';
 import 'package:infinitywords/modules/home/domain/repositories/home_repository.dart';
 import 'package:infinitywords/modules/home/infra/mappers/game_entity_mapper.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -63,5 +66,39 @@ class HomeRepositoryImp implements HomeRepository {
         error: 'Algo deu errado',
       ));
     }
+  }
+
+  @override
+  Future<Result<String, CreateGameBaseError>> createGame(
+    CreateGameParameter parameter,
+  ) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user == null) {
+        return const Error(UnauthenticateUserCreateGameFirebaseError());
+      }
+
+      final userId = user.uid;
+
+      final ref = _database.collection('games');
+
+      final game = GameEntity(
+        topic: parameter.input,
+        dificult: parameter.dificult,
+      );
+
+      final chatCompletion = await OpenAI.instance.chat.create(
+        model: 'model-3.5-turbo',
+        messages: [
+          OpenAIChatCompletionChoiceMessageModel(
+            role: OpenAIChatMessageRole.user,
+            content: game.topic,
+          ),
+        ],
+      );
+      
+    } catch (e) {}
+    throw UnimplementedError();
   }
 }
