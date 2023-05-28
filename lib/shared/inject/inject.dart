@@ -4,11 +4,13 @@ import 'package:infinitywords/modules/auth/domain/usecases/google_sign_in.dart';
 import 'package:infinitywords/modules/auth/infra/repositories/auth_repository_imp.dart';
 import 'package:infinitywords/modules/auth/presenter/blocs/bloc/sign_in_bloc.dart';
 import 'package:infinitywords/modules/home/domain/repositories/home_repository.dart';
-import 'package:infinitywords/modules/home/domain/usecase/get_favorite_games_usecase.dart';
-import 'package:infinitywords/modules/home/domain/usecase/get_recent_games_usecase.dart';
-import 'package:infinitywords/modules/home/domain/usecase/start_create_game_usecase.dart';
-import 'package:infinitywords/modules/home/infra/repositories/home_repositorie.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/bloc/home_bloc.dart';
+import 'package:infinitywords/modules/home/domain/usecases/create_game_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/get_favorite_games_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/get_recent_games_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/start_create_game_usecase.dart';
+import 'package:infinitywords/modules/home/infra/repositories/home_repository.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/blocs/create_game_bloc.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/blocs/home_bloc.dart';
 
 class Inject {
   final getIt = GetIt.I;
@@ -24,6 +26,9 @@ class Inject {
     getIt.registerLazySingleton<StartCreateGameUsecase>(
       () => StartCreateGameUsecaseImp(),
     );
+    getIt.registerLazySingleton<CreateGameUsecase>(
+      () => CreateGameUsecaseImp(getIt()),
+    );
     getIt.registerLazySingleton<GetFavoriteGamesUsecase>(
       () => GetFavoriteGamesUsecaseImp(getIt()),
     );
@@ -36,6 +41,9 @@ class Inject {
         getFavoriteGamesUsecase: getIt(),
         getRecentGamesUsecase: getIt(),
       ),
+    );
+    getIt.registerLazySingleton<CreateGameBloc>(
+      () => CreateGameBloc(createGameUsecase: getIt()),
     );
   }
 

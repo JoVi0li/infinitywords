@@ -12,14 +12,14 @@ class StartCreateGameUsecaseImp implements StartCreateGameUsecase {
     final input = parameter.input;
 
     if (input.isEmpty) {
-      return Error(GenericHomeError(
+      return Error(HomeError.genericError(
         message: 'Informe um assunto válido',
         error: 'Assunto inválido',
       ));
     }
 
     if (input.length < 3) {
-      return Error(GenericHomeError(
+      return Error(HomeError.genericError(
         message: 'Informe um assunto válido',
         error: 'Assunto inválido',
       ));

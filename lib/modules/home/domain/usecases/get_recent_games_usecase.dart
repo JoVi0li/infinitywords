@@ -1,10 +1,10 @@
-import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
-import 'package:infinitywords/modules/home/domain/errors/get_recent_games_errors.dart';
+import 'package:infinitywords/modules/home/domain/errors/home_errors.dart';
 import 'package:infinitywords/modules/home/domain/repositories/home_repository.dart';
+import 'package:infinitywords/modules/home/domain/responses/get_games_response.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 abstract class GetRecentGamesUsecase {
-  Future<Result<List<GameEntity>, GetRecentGamesError>> call();
+  Future<Result<GetGamesResponse, HomeError>> call();
 }
 
 class GetRecentGamesUsecaseImp implements GetRecentGamesUsecase {
@@ -12,7 +12,7 @@ class GetRecentGamesUsecaseImp implements GetRecentGamesUsecase {
   final HomeRepository _repository;
 
   @override
-  Future<Result<List<GameEntity>, GetRecentGamesError>> call() async {
+  Future<Result<GetGamesResponse, HomeError>> call() async {
     return await _repository.getRecentGames();
   }
 }

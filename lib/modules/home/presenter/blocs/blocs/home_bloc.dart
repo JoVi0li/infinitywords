@@ -1,18 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:infinitywords/modules/home/domain/parameters/start_create_game_parameter.dart';
-import 'package:infinitywords/modules/home/domain/usecase/start_create_game_usecase.dart';
-import 'package:infinitywords/modules/home/domain/usecase/get_favorite_games_usecase.dart';
-import 'package:infinitywords/modules/home/domain/usecase/get_recent_games_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/start_create_game_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/get_favorite_games_usecase.dart';
+import 'package:infinitywords/modules/home/domain/usecases/get_recent_games_usecase.dart';
 import 'package:infinitywords/modules/home/presenter/blocs/enums/welcome_message_enum.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/events/create_game_event.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/events/get_favorite_games_event.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/events/get_recent_games_event.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/events/home_event.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/states/create_game_state.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/states/get_favorite_games_state.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/states/get_recent_games_state.dart';
-import 'package:infinitywords/modules/home/presenter/blocs/states/home_state.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/home/get_favorite_games_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/home/start_create_game_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/home/get_recent_games_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/events/home/home_event.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/home/get_favorite_games_state.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/home/get_recent_games_state.dart';
+import 'package:infinitywords/modules/home/presenter/blocs/states/home/home_state.dart';
 import 'package:infinitywords/shared/routes/home_routes.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -26,9 +25,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     _getRecentGamesUsecase = getRecentGamesUsecase;
     formKey = GlobalKey();
     inputController = TextEditingController();
+    inputFocus = FocusNode();
     on<GetFavoriteGamesEvent>(handleGetFavoriteGamesEvent);
     on<GetRecentGamesEvent>(handleGetRecentGamesEvent);
-    on<CreateGameEvent>(handleCreateGameEvent);
+    on<StartCreateGameEvent>(handleCreateGameEvent);
   }
 
   late final StartCreateGameUsecase _startCreateGameUsecase;
@@ -37,6 +37,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   late final GlobalKey<FormState> formKey;
   late final TextEditingController inputController;
+
+  late final FocusNode inputFocus;
 
   String get welcomeMessage {
     final hour = DateTime.now().hour;
@@ -49,7 +51,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> handleCreateGameEvent(
-    CreateGameEvent event,
+    StartCreateGameEvent event,
     Emitter<HomeState> emit,
   ) async {
     if (!formKey.currentState!.validate()) return;
@@ -60,7 +62,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     result.when(
       (input) async => await navigateToCreateGamePage(event.context, input),
-      (error) => emit(ErrorCreateGameState(error)),
+      (error) => emit(ErrorStartCreateGameState(error)),
     );
   }
 

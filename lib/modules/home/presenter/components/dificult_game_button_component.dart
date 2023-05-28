@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:infinitywords/modules/home/domain/enums/dificult_enum.dart';
 
 class DificultGameButtonComponent extends StatefulWidget {
   const DificultGameButtonComponent({
     super.key,
     required this.dificult,
     required this.onPressed,
-    required this.selectedKey,
+    required this.dificultSelected,
   });
-  final String dificult;
-  final void Function(GlobalKey key) onPressed;
-  final GlobalKey selectedKey;
+  final GameDificultEnum dificult;
+  final GameDificultEnum dificultSelected;
+  final void Function(GameDificultEnum dificult) onPressed;
 
   @override
   State<DificultGameButtonComponent> createState() =>
@@ -18,12 +19,9 @@ class DificultGameButtonComponent extends StatefulWidget {
 
 class _DificultGameButtonComponentState
     extends State<DificultGameButtonComponent> {
-  late final GlobalKey key;
-
   @override
   void initState() {
     super.initState();
-    key = GlobalKey();
   }
 
   @override
@@ -31,7 +29,7 @@ class _DificultGameButtonComponentState
     final screenSize = MediaQuery.of(context).size;
 
     return OutlinedButton(
-      onPressed: () => widget.onPressed(key),
+      onPressed: () => widget.onPressed(widget.dificult),
       style: Theme.of(context).outlinedButtonTheme.style!.copyWith(
             fixedSize: MaterialStatePropertyAll(
               Size(screenSize.width * 0.25, 60),
@@ -39,12 +37,12 @@ class _DificultGameButtonComponentState
             padding: const MaterialStatePropertyAll(
               EdgeInsets.all(0),
             ),
-            backgroundColor: widget.selectedKey == key
+            backgroundColor: widget.dificultSelected == widget.dificult
                 ? const MaterialStatePropertyAll(Color(0xFF313040))
                 : null,
           ),
       child: Text(
-        widget.dificult,
+        widget.dificult.translatedValue,
         style: Theme.of(context).textTheme.bodySmall,
       ),
     );

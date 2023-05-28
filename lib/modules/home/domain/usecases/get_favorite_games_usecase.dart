@@ -1,10 +1,10 @@
-import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
-import 'package:infinitywords/modules/home/domain/errors/get_favorite_games_errors.dart';
+import 'package:infinitywords/modules/home/domain/errors/home_errors.dart';
 import 'package:infinitywords/modules/home/domain/repositories/home_repository.dart';
+import 'package:infinitywords/modules/home/domain/responses/get_games_response.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 abstract class GetFavoriteGamesUsecase {
-  Future<Result<List<GameEntity>, GetFavoriteGamesError>> call();
+  Future<Result<GetGamesResponse, HomeError>> call();
 }
 
 class GetFavoriteGamesUsecaseImp implements GetFavoriteGamesUsecase {
@@ -12,7 +12,7 @@ class GetFavoriteGamesUsecaseImp implements GetFavoriteGamesUsecase {
   final HomeRepository _repository;
 
   @override
-  Future<Result<List<GameEntity>, GetFavoriteGamesError>> call() async {
+  Future<Result<GetGamesResponse, HomeError>> call() async {
     return await _repository.getFavoriteGames();
   }
 }

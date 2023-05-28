@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
+import 'package:infinitywords/modules/home/domain/entities/historic_game_entity.dart';
 
 class GameListComponent extends StatelessWidget {
   const GameListComponent({
@@ -8,7 +8,7 @@ class GameListComponent extends StatelessWidget {
     required this.isLoading,
   });
 
-  final List<GameEntity> games;
+  final List<HistoricGameEntity> games;
   final bool isLoading;
 
   @override

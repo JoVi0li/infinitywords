@@ -1,8 +1,12 @@
 enum GameDificultEnum {
-  easy('easy'),
-  normal('normal'),
-  hard('hard');
+  easy('easy', 'Fácil'),
+  normal('normal', 'Normal'),
+  hard('hard', 'Difícil');
 
   final String value;
-  const GameDificultEnum(this.value);
+  final String translatedValue;
+  const GameDificultEnum(
+    this.value,
+    this.translatedValue,
+  );
 }
