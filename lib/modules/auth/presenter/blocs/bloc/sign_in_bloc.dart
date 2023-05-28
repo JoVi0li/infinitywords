@@ -45,7 +45,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   void signIn() {
     if (Platform.isAndroid) {
       add(GoogleSignInEvent());
-    } else {
+    } else if (Platform.isIOS) {
       // TODO: Implements IOS signIn
     }
   }

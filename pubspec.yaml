@@ -11,11 +11,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.11.0
   firebase_auth: ^4.5.0
+  cloud_firestore: ^4.7.0
   google_sign_in: ^6.1.0
   multiple_result: ^4.0.0
   get_it: ^7.4.1
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2
+  dart_openai: ^1.9.91
+  envied: ^0.3.0+3
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +26,8 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.2.19
+  envied_generator: ^0.3.0+3
+  build_runner: ^2.3.3
 
 flutter:
   uses-material-design: true
