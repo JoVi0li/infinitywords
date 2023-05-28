@@ -3,10 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:infinitywords/env/env.dart';
 import 'package:infinitywords/firebase_options.dart';
+import 'package:infinitywords/modules/game/presenter/screens/game_screen.dart';
 import 'package:infinitywords/modules/home/presenter/screens/create_game_screen.dart';
 import 'package:infinitywords/modules/home/presenter/screens/home_screen.dart';
+import 'package:infinitywords/modules/home/presenter/screens/loading_game_screen.dart';
 import 'package:infinitywords/shared/inject/inject.dart';
 import 'package:infinitywords/shared/routes/auth_routes.dart';
+import 'package:infinitywords/shared/routes/game_routes.dart';
 import 'package:infinitywords/shared/routes/home_routes.dart';
 import 'package:infinitywords/shared/themes/button_theme.dart';
 import 'package:infinitywords/shared/themes/input_theme.dart';
@@ -41,6 +44,8 @@ class MyApp extends StatelessWidget {
         AuthRoutes.signIn: (context) => const SignInScreen(),
         HomeRoutes.home: (context) => const HomeScreen(),
         HomeRoutes.createGame: (context) => const CreateGameScreen(),
+        HomeRoutes.loadingGame: (context) => const LoadingGameScreen(),
+        GameRoutes.game: (context) => const GameScreen(),
       },
       initialRoute: AuthRoutes.signIn,
     );

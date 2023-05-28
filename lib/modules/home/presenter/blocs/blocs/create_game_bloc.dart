@@ -6,6 +6,7 @@ import 'package:infinitywords/modules/home/domain/usecases/create_game_usecase.d
 import 'package:infinitywords/modules/home/presenter/blocs/events/create_game/create_game_event.dart';
 import 'package:infinitywords/modules/home/presenter/blocs/states/create_game/create_game_state.dart';
 import 'package:infinitywords/shared/routes/game_routes.dart';
+import 'package:infinitywords/shared/routes/home_routes.dart';
 
 class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
   CreateGameBloc({
@@ -51,7 +52,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
     inputController.text = input;
   }
 
-  Future<void> naivgateToGamePage(
+  Future<void> navigateToGamePage(
     BuildContext context,
     GameEntity game,
   ) async {
@@ -59,6 +60,13 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
       context,
       GameRoutes.game,
       (route) => false,
+    );
+  }
+
+  Future<void> navigateToLoadingGamePage(BuildContext context) async {
+    return await Navigator.pushNamed<void>(
+      context,
+      HomeRoutes.loadingGame,
     );
   }
 

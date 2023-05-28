@@ -28,11 +28,11 @@ class HomeRepositoryImp implements HomeRepository {
             ),
           ),
         ],
-      ).then((value) => value.choices.map((e) => e.message.content).toList());
+      ).then((value) => value.choices[0].message.content.split(" "));
 
       final result = await FirebaseFirestore.instance.collection('games').add({
         'topic': parameter.input,
-        'dificult': parameter.dificult,
+        'dificult': parameter.dificult.value,
         'words': words
       });
 
