@@ -60,6 +60,7 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
       context,
       GameRoutes.game,
       (route) => false,
+      arguments: game,
     );
   }
 

@@ -3,6 +3,12 @@ import 'package:infinitywords/modules/auth/domain/repositories/auth_repository.d
 import 'package:infinitywords/modules/auth/domain/usecases/google_sign_in.dart';
 import 'package:infinitywords/modules/auth/infra/repositories/auth_repository_imp.dart';
 import 'package:infinitywords/modules/auth/presenter/blocs/bloc/sign_in_bloc.dart';
+import 'package:infinitywords/modules/game/domain/repositories/game_repository.dart';
+import 'package:infinitywords/modules/game/domain/usecases/favorite_game_usecase.dart';
+import 'package:infinitywords/modules/game/domain/usecases/mark_word_usecase.dart';
+import 'package:infinitywords/modules/game/domain/usecases/unfavorite_game_usecase.dart';
+import 'package:infinitywords/modules/game/infra/game_repository.dart';
+import 'package:infinitywords/modules/game/presenter/blocs/blocs/game_bloc.dart';
 import 'package:infinitywords/modules/home/domain/repositories/home_repository.dart';
 import 'package:infinitywords/modules/home/domain/usecases/create_game_usecase.dart';
 import 'package:infinitywords/modules/home/domain/usecases/get_favorite_games_usecase.dart';
@@ -44,6 +50,25 @@ class Inject {
     );
     getIt.registerLazySingleton<CreateGameBloc>(
       () => CreateGameBloc(createGameUsecase: getIt()),
+    );
+
+    /// Game module
+    getIt.registerLazySingleton<GameRepository>(() => GameRepositoryImp());
+    getIt.registerLazySingleton<MarkWordUsecase>(
+      () => MarkWordUsecaseImp(getIt()),
+    );
+    getIt.registerLazySingleton<FavoriteGameUsecase>(
+      () => FavoriteGameUsecaseImp(getIt()),
+    );
+    getIt.registerLazySingleton<UnfavoriteGameUsecase>(
+      () => UnfavoriteGameUsecaseImp(getIt()),
+    );
+    getIt.registerLazySingleton<GameBloc>(
+      () => GameBloc(
+        markWordUsecase: getIt(),
+        favoriteGameUsecase: getIt(),
+        unfavoriteGameUsecase: getIt(),
+      ),
     );
   }
 
