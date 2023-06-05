@@ -49,8 +49,8 @@ class _CreateGameScreenState extends State<CreateGameScreen> {
     return GestureDetector(
       onTap: FocusManager.instance.primaryFocus?.unfocus,
       child: Scaffold(
-        body: SafeArea(
-          minimum: const EdgeInsets.only(
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(
             left: 16,
             right: 16,
             top: 90,
@@ -135,7 +135,7 @@ class _CreateGameScreenState extends State<CreateGameScreen> {
                     ),
                   ],
                 ),
-                const Spacer(),
+                const SizedBox(height: 100),
                 Center(
                   child: OutlinedButton(
                     onPressed: addNewCreateGameEvent,

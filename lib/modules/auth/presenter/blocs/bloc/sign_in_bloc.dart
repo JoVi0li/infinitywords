@@ -7,7 +7,6 @@ import 'package:infinitywords/modules/auth/presenter/blocs/events/sign_in_event.
 import 'package:infinitywords/modules/auth/presenter/blocs/states/sign_in_state.dart';
 import 'package:infinitywords/shared/routes/home_routes.dart';
 import 'package:infinitywords/shared/widgets/message_widget.dart';
-import 'dart:io' show Platform;
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final GoogleSignInUsecase _usecase;
@@ -43,11 +42,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   void signIn() {
-    if (Platform.isAndroid) {
-      add(GoogleSignInEvent());
-    } else if (Platform.isIOS) {
-      // TODO: Implements IOS signIn
-    }
+    add(GoogleSignInEvent());
   }
 
   void handleListener(BuildContext ctx, SignInState state) {
