@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
-import 'package:infinitywords/modules/home/domain/enums/dificult_enum.dart';
 
 class WordBoardComponent extends CustomPainter {
   WordBoardComponent(this.context, {required this.game});
@@ -10,8 +9,7 @@ class WordBoardComponent extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final wordsShuffle = game.dificult.wordsShuffle;
-    const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const allChars = 'abcdefghijklmnopqrstuvwxyz';
 
     final maxWidth = size.width - (size.width % 20);
     final maxHeight = size.height - (size.height % 20);
@@ -23,23 +21,43 @@ class WordBoardComponent extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = Colors.white
       ..strokeWidth = 2;
-
-    List<Map<String, dynamic>> positions = [];
-    TextPainter textPainter = TextPainter(
+    final textPainter = TextPainter(
       textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
     );
 
+    final List<Offset> positions = [];
+
+    /// Set all avaliable positions
     for (double y = 0; y < maxHeight; y += 20) {
-      for (double x = 0; x < maxWidth; x += 20) {
-        positions.add({
-          'position': Offset(x, y),
-          'avaliable': true,
-        });
+      for (double x = 10; x < maxWidth; x += 20) {
+        positions.add(Offset(x, y));
       }
     }
 
+    /// Draw all topic words
+    for (String word in game.words) {
+      final position = positions[random.nextInt(positions.length - 60)];
+      final positionIndex = positions.indexOf(position);
+      for (String letter in word.split('')) {
+        textPainter.text = TextSpan(
+          text: letter.toLowerCase(),
+          style: textStyle,
+        );
+        textPainter.layout();
+        textPainter.paint(canvas, positions[positionIndex]);
+        positions.removeAt(positionIndex);
+      }
+    }
 
+    /// Fill the board
+    for (Offset position in positions) {
+      textPainter.text = TextSpan(
+        text: allChars[random.nextInt(allChars.length)],
+        style: textStyle,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, position);
+    }
 
     /// Word board container
     canvas.drawRRect(

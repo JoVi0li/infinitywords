@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:infinitywords/modules/game/presenter/blocs/blocs/game_bloc.dart';
 import 'package:infinitywords/modules/game/presenter/components/word_board_component.dart';
+import 'package:infinitywords/modules/game/presenter/components/word_list_component.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -58,16 +59,20 @@ class _GameScreenState extends State<GameScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width - 32,
-                height: MediaQuery.of(context).size.height / 2,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width - 32,
+              height: MediaQuery.of(context).size.height / 2,
+              child: GestureDetector(
+                onHorizontalDragStart: (details) {},
+                onHorizontalDragUpdate: (details) {},
+                onVerticalDragStart: (details) {},
+                onVerticalDragUpdate: (details) {},
+                onHorizontalDragEnd: (details) {},
                 child: CustomPaint(
                   painter: WordBoardComponent(
                     context,
@@ -76,8 +81,14 @@ class _GameScreenState extends State<GameScreen> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 24),
+          Expanded(
+            child: SingleChildScrollView(
+              child: WordListComponent(words: _bloc.game.words),
+            ),
+          ),
+        ],
       ),
     );
   }
