@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:infinitywords/modules/home/domain/entities/game_entity.dart';
 import 'package:infinitywords/modules/home/domain/entities/historic_game_entity.dart';
 import 'package:infinitywords/modules/home/domain/errors/home_errors.dart';
@@ -17,18 +18,26 @@ class HomeRepositoryImp implements HomeRepository {
     CreateGameParameter parameter,
   ) async {
     try {
-      final words = await OpenAI.instance.chat.create(
+      List<String> words = [];
+      final onlyAlphabeticRegExp = RegExp(r'/[^a-z][,!.]/g');
+
+      final completion = await OpenAI.instance.chat.create(
         model: 'gpt-3.5-turbo',
         messages: [
           OpenAIChatCompletionChoiceMessageModel(
             role: OpenAIChatMessageRole.user,
-            content: CreateGamePrompts.call(
+            content: CreateGamePrompts.prompt(
               topic: parameter.input,
               dificult: parameter.dificult,
             ),
           ),
         ],
       ).then((value) => value.choices[0].message.content.split(" "));
+
+      for (String word in completion) {
+        final wordFormatted = word.replaceAll(onlyAlphabeticRegExp, '');
+        words.add(wordFormatted);
+      }
 
       final result = await FirebaseFirestore.instance.collection('games').add({
         'topic': parameter.input,
@@ -61,10 +70,9 @@ class HomeRepositoryImp implements HomeRepository {
       if (user == null) return Error(UnauthenticateUser());
 
       final favoriteGamesSnapshot = await FirebaseFirestore.instance
-          .collection('historic')
+          .collection('historics')
           .where('userId', isEqualTo: user.uid)
           .where('isFavorite', isEqualTo: true)
-          // .orderBy('createdAt', descending: true)
           .get();
 
       if (favoriteGamesSnapshot.docs.isEmpty) {
@@ -77,6 +85,7 @@ class HomeRepositoryImp implements HomeRepository {
 
       return Success(GetGamesResponse(favoriteGames));
     } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') return Success(GetGamesResponse([]));
       return Error(HomeError.firebaseError(e));
     } on RequestFailedException catch (e) {
       return Error(HomeError.openAIError(e));
@@ -91,9 +100,8 @@ class HomeRepositoryImp implements HomeRepository {
       if (user == null) return Error(UnauthenticateUser());
 
       final recentGamesSnapshot = await FirebaseFirestore.instance
-          .collection('historic')
+          .collection('historics')
           .where('userId', isEqualTo: user.uid)
-          // .orderBy('createdAt', descending: true)
           .limit(10)
           .get();
 
@@ -102,14 +110,38 @@ class HomeRepositoryImp implements HomeRepository {
       }
 
       final recentGames = recentGamesSnapshot.docs
-          .map((e) => HistoricGameEntity.fromJson(e.data()))
+          .map((e) => HistoricGameEntity.fromJson({'id': e.id, ...e.data()}))
           .toList();
 
       return Success(GetGamesResponse(recentGames));
     } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') return Success(GetGamesResponse([]));
       return Error(HomeError.firebaseError(e));
     } on RequestFailedException catch (e) {
       return Error(HomeError.openAIError(e));
+    }
+  }
+
+  @override
+  Future<Result<void, HomeError>> addGameToHistoric(GameEntity game) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+
+      final result =
+          await FirebaseFirestore.instance.collection('historics').add({
+        'userId': user.uid,
+        'gameId': game.id,
+        'topic': game.topic,
+        'dificult': game.dificult.value,
+        'isFavorite': false
+      });
+
+      debugPrint(result.toString());
+
+      return const Success(null);
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      return Error(HomeError.firebaseError(e));
     }
   }
 }

@@ -34,7 +34,7 @@ class WordBoardComponent extends CustomPainter {
       }
     }
 
-    /// Draw all topic words
+    /// Draw all game words
     for (String word in game.words) {
       final position = positions[random.nextInt(positions.length - 60)];
       final positionIndex = positions.indexOf(position);
@@ -49,7 +49,7 @@ class WordBoardComponent extends CustomPainter {
       }
     }
 
-    /// Fill the board
+    /// Fill the board with random letters
     for (Offset position in positions) {
       textPainter.text = TextSpan(
         text: allChars[random.nextInt(allChars.length)],
@@ -71,6 +71,10 @@ class WordBoardComponent extends CustomPainter {
       ),
       boardPaint,
     );
+  }
+
+  void paintShadow(Offset offset, Canvas canvas) {
+    return canvas.drawShadow(Path(), Colors.red, 10, true);
   }
 
   @override

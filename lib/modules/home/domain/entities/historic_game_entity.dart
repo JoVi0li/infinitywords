@@ -17,7 +17,7 @@ class HistoricGameEntity {
     return HistoricGameEntity(
       id: json['id'],
       topic: json['topic'],
-      dificult: json['dificult'],
+      dificult: GameDificultEnum.values.byName(json['dificult']),
       isFavorite: json['isFavorite'],
     );
   }

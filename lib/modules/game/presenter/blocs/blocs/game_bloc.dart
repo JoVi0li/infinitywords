@@ -18,6 +18,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     _favoriteGameUsecase = favoriteGameUsecase;
     _unfavoriteGameUsecase = unfavoriteGameUsecase;
     on<MarkWordGameEvent>(handleMarkWordEvent);
+    on<ChangeFavoriteGameStatus>(handleChangeFavoriteGameEvent);
   }
 
   late final MarkWordUsecase _markWordUsecase;

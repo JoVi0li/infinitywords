@@ -46,8 +46,7 @@ class _LoadingGameScreenState extends State<LoadingGameScreen> {
                   title: state.error.error,
                   message: state.error.message,
                 ),
-              );
-              Navigator.pop(context);
+              ).then((_) => _bloc.navigateToHomePage(context));
             }
           },
           child: Text(

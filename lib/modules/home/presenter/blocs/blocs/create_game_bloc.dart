@@ -71,6 +71,10 @@ class CreateGameBloc extends Bloc<CreateGameEvent, CreateGameState> {
     );
   }
 
+  void navigateToHomePage(BuildContext context) {
+    return Navigator.popUntil(context, ModalRoute.withName(HomeRoutes.home));
+  }
+
   String? inputValidator(String? value) {
     if (value == null) return 'Informe um tópico válido';
     if (value.isEmpty) return 'Informe um tópico válido';

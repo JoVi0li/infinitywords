@@ -18,13 +18,15 @@ class _WordListComponentState extends State<WordListComponent> {
       spacing: 8.0,
       runSpacing: 4.0,
       children: widget.words
-          .map((e) => Chip(
-                backgroundColor: const Color(0xFF313040),
-                label: Text(
-                  e,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ))
+          .map(
+            (e) => Chip(
+              backgroundColor: const Color(0xFF313040),
+              label: Text(
+                e,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          )
           .toList(),
     );
   }

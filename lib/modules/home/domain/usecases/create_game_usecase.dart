@@ -18,6 +18,18 @@ class CreateGameUsecaseImp implements CreateGameUsecase {
   Future<Result<CreateGameResponse, HomeError>> call(
     CreateGameParameter parameter,
   ) async {
-    return await _repository.createGame(parameter);
+    final result = await _repository.createGame(parameter);
+
+    return result.when(
+      (success) async {
+        final historicResult =
+            await _repository.addGameToHistoric(success.game);
+        if (historicResult.isError()) {
+          return Error(historicResult.whenError((e) => e)!);
+        }
+        return Success(success);
+      },
+      (error) => Error(error),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:infinitywords/modules/game/presenter/blocs/blocs/game_bloc.dart';
+import 'package:infinitywords/modules/game/presenter/blocs/events/game_event.dart';
 import 'package:infinitywords/modules/game/presenter/components/word_board_component.dart';
 import 'package:infinitywords/modules/game/presenter/components/word_list_component.dart';
 
@@ -14,6 +15,9 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final getIt = GetIt.I;
   late final GameBloc _bloc;
+  bool isFavorite = false;
+
+  ValueNotifier<Offset> selectedWord = ValueNotifier(const Offset(0, 0));
 
   @override
   void initState() {
@@ -31,6 +35,10 @@ class _GameScreenState extends State<GameScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _bloc.initCurrentGameValue(context);
+  }
+
+  addChangeFavoriteGameStatus(bool isFavorite) {
+    _bloc.add(ChangeFavoriteGameStatus(isFavorite));
   }
 
   @override
@@ -54,8 +62,13 @@ class _GameScreenState extends State<GameScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+            onPressed: () {
+              setState(() {
+                isFavorite = !isFavorite;
+              });
+              addChangeFavoriteGameStatus(isFavorite);
+            },
+            icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
           ),
         ],
       ),
@@ -63,13 +76,36 @@ class _GameScreenState extends State<GameScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(height: 24),
           Center(
             child: SizedBox(
               width: MediaQuery.of(context).size.width - 32,
               height: MediaQuery.of(context).size.height / 2,
               child: GestureDetector(
-                onHorizontalDragStart: (details) {},
-                onHorizontalDragUpdate: (details) {},
+                onHorizontalDragStart: (details) {
+                  setState(() {
+                    final offset = Offset(
+                      details.localPosition.dx -
+                          (details.localPosition.dx % 20),
+                      details.localPosition.dy -
+                          (details.localPosition.dy % 20),
+                    );
+
+                    selectedWord.value = offset;
+                  });
+                },
+                onHorizontalDragUpdate: (details) {
+                  setState(() {
+                    final offset = Offset(
+                      details.localPosition.dx -
+                          (details.localPosition.dx % 20),
+                      details.localPosition.dy -
+                          (details.localPosition.dy % 20),
+                    );
+
+                    selectedWord.value = offset;
+                  });
+                },
                 onVerticalDragStart: (details) {},
                 onVerticalDragUpdate: (details) {},
                 onHorizontalDragEnd: (details) {},

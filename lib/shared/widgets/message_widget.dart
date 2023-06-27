@@ -24,7 +24,7 @@ class MessageWidget extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
+          onPressed: () => Navigator.pop(context),
           child: Text(
             'OK',
             style: Theme.of(context).textTheme.labelLarge,

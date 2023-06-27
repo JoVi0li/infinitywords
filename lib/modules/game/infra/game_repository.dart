@@ -14,7 +14,7 @@ class GameRepositoryImp implements GameRepository {
     try {
       final user = FirebaseAuth.instance.currentUser!;
       final game = await FirebaseFirestore.instance
-          .collection('historic')
+          .collection('historics')
           .where('userId', isEqualTo: user.uid)
           .where('gameId', isEqualTo: gameId)
           .get();
@@ -42,23 +42,5 @@ class GameRepositoryImp implements GameRepository {
     }
 
     return Error(WordNotFoundError());
-  }
-
-  @override
-  Future<Result<void, GameError>> addGametoHistoric(GameEntity game) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser!;
-
-      await FirebaseFirestore.instance.collection('historic').add({
-        'userId': user.uid,
-        'gameId': game.id,
-        'topic': game.topic,
-        'dificult': game.dificult
-      });
-
-      return const Success(null);
-    } on FirebaseException catch (e) {
-      return Error(GameError.firebaseError(e));
-    }
   }
 }

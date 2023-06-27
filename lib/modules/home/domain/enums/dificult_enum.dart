@@ -22,7 +22,9 @@ enum GameDificultEnum {
     this.value,
     this.translatedValue,
     this.wordsShuffle,
+
   );
+
 }
 
 enum WordShuffle {
@@ -31,3 +33,5 @@ enum WordShuffle {
   crossToRight,
   crossToLeft,
 }
+
+

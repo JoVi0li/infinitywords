@@ -4,10 +4,13 @@ import 'package:infinitywords/modules/home/domain/responses/create_game_response
 import 'package:infinitywords/modules/home/domain/responses/get_games_response.dart';
 import 'package:multiple_result/multiple_result.dart';
 
+import '../entities/game_entity.dart';
+
 abstract class HomeRepository {
   Future<Result<GetGamesResponse, HomeError>> getRecentGames();
   Future<Result<GetGamesResponse, HomeError>> getFavoriteGames();
   Future<Result<CreateGameResponse, HomeError>> createGame(
     CreateGameParameter parameter,
   );
+  Future<Result<void, HomeError>> addGameToHistoric(GameEntity game);
 }
